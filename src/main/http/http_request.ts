@@ -9,7 +9,7 @@ export class HttpRequest<
     params?: Params
     token?: Token
 
-    constructor(body: Body, header: Header, params: Params, token: Token){
+    constructor(body?: Body, header?: Header, params?: Params, token?: Token){
 
         this.body = body
         this.header = header
