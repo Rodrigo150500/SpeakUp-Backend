@@ -1,5 +1,4 @@
 import * as z from "zod"
-import { IUser } from "../types/user";
 
 export function register_user_validation(data: unknown) {
     
