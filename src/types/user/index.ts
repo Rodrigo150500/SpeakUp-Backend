@@ -3,7 +3,7 @@ export interface IUser{
     email: string
     password: string
     role: string
-    classe: string
+    section: string
     grade: string
 }
 
@@ -12,7 +12,7 @@ export interface IUserResponse {
     name: string,
     email: string,
     grade: string | null,
-    class: string | null,
+    section: string | null,
     number: number,
     password: string
     role: string,
