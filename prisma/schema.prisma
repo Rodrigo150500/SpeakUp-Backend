@@ -17,7 +17,7 @@ model Users {
   name String
   email String @unique
   grade String?
-  class String?
+  section String?
   number Int @default(autoincrement())
   password String
   role String
