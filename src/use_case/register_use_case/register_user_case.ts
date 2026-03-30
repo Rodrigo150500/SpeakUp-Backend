@@ -1,11 +1,11 @@
-import { IUserRepository } from "../model/postgre/interfaces/user_repository_interface";
+import { IUserRepository } from "../../model/postgre/interfaces/user_repository_interface";
 
-import { IUser } from "../types/user";
+import { IUser } from "../../types/user";
 
-import { register_user_validation } from "../validation/register_user_validation";
+import { register_user_validation } from "../../validation/register_user_validation";
 
-import { HttpResponse } from "../main/http/http_response";
-import { HttpRequest } from "../main/http/http_request";
+import { HttpResponse } from "../../main/http/http_response";
+import { HttpRequest } from "../../main/http/http_request";
 
 type Body = {
     name: string
