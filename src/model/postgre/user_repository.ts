@@ -2,7 +2,9 @@ import {prisma} from "../../driver/prisma"
 
 import { IUser, IUserResponse } from "../../types/user"
 
-export class UserRepository{
+import { IUserRepository } from "./interfaces/user_repository_interface"
+
+export class UserRepository implements IUserRepository{
 
     async create({name, email, password, role, classe, grade}: IUser): Promise<IUserResponse>{
 
@@ -18,12 +20,23 @@ export class UserRepository{
             }
         })
         
-        const { password: _, ...userWithoutPassword } = user;
 
-        return userWithoutPassword
+        return user
     }
 
-    async findByEmail(email: string){
+    async findById(id: string): Promise<IUserResponse | null> {
+
+        const user = await prisma.users.findUnique({
+            where:{
+                id: id
+            }
+        })
+
+        return user
+
+    }
+
+    async findByEmail(email: string): Promise<IUserResponse | null>{
 
         const user = await prisma.users.findUnique({
             where: {
@@ -34,6 +47,4 @@ export class UserRepository{
         return user
 
     } 
-
 }
-
