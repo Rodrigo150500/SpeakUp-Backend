@@ -14,6 +14,7 @@ export interface IUserResponse {
     grade: string | null,
     class: string | null,
     number: number,
+    password: string
     role: string,
     created_at: Date
 }
