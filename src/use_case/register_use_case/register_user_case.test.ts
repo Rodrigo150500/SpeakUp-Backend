@@ -1,12 +1,12 @@
 import { RegisterUserUseCase } from "./register_user_case";
 
-import { UserRepository } from "../model/postgre/user_repository";
+import { UserRepository } from "../../model/postgre/user_repository";
 
-import { HttpRequest } from "../main/http/http_request";
-import { IUser } from "../types/user";
+import { HttpRequest } from "../../main/http/http_request";
+import { IUser } from "../../types/user";
 
 import {expect, test} from "vitest"
-import { HttpResponse } from "../main/http/http_response";
+import { HttpResponse } from "../../main/http/http_response";
 
 test("Should create user in database", async () => {
   
