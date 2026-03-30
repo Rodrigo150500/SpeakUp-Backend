@@ -16,7 +16,15 @@ type Body = {
     role: string
 }
 
-export class RegisterUser{
+type BodyResponse = {
+    data: {
+            operation: string,
+            count: number,
+            attributes: Omit<IUser, "password">
+        }
+}
+
+export class RegisterUserUseCase{
 
     repository: IUserRepository
 
@@ -24,11 +32,11 @@ export class RegisterUser{
         this.repository = user_repository
     }
 
-    async handle(http_request: HttpRequest<Body>){
+    async handle(http_request: HttpRequest<Body>): Promise<HttpResponse<BodyResponse>>{
 
         const parsed = register_user_validation(http_request.body)
 
-        this.insert_in_database(parsed)
+        await this.insert_in_database(parsed)
 
         const formatted_response = this.format_response(parsed)
 
