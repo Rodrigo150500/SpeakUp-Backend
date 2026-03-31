@@ -15,7 +15,7 @@ test("Should create user in database", async () => {
 
   const body: IUser = {
     name: "Rodrigo",
-    email: "rodrigo.takaragmail.com",
+    email: "rodrigo.takara1505@gmail.com",
     grade: "5°",
     section: "B",
     password: "123",
