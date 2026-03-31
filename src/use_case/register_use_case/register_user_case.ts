@@ -26,7 +26,7 @@ type BodyResponse = {
 
 export class RegisterUserUseCase{
 
-    repository: IUserRepository
+    private repository: IUserRepository
 
     constructor(user_repository: IUserRepository){
         this.repository = user_repository

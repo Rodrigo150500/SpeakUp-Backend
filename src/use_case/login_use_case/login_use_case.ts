@@ -11,7 +11,7 @@ type Body = {
 
 export class LoginUseCase{
 
-    repository: UserRepository
+    private repository: UserRepository
 
     constructor(repository: UserRepository){
         this.repository = repository
