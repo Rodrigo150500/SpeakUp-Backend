@@ -1,27 +1,23 @@
 import express from "express"
-import http from "http"
 import path from "path"
-import { fileURLToPath } from "url"
-import { Server } from "socket.io"
-
-// 👇 recria __dirname
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+import http from "http"
+import { setupSocket } from "../socket/socket"
 
 const app = express()
 
-app.use(express.static(path.join(__dirname, "../../template")))
-
 const server = http.createServer(app)
 
-const io = new Server(server, {
-  cors: { origin: "*" }
+// injeta o server no socket
+setupSocket(server)
+
+app.get("/professor", (req, res) => {
+  res.sendFile(path.resolve("template/professor.html"))
 })
 
-io.on("connection", (socket) => {
-  console.log("Conectado:", socket.id)
+app.get("/aluno", (req, res) => {
+  res.sendFile(path.resolve("template/aluno.html"))
 })
 
 server.listen(3000, () => {
-  console.log("Rodando em http://localhost:3000")
+  console.log("Servidor rodando em http://localhost:3000")
 })
