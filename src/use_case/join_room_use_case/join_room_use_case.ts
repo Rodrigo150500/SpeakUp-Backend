@@ -3,6 +3,7 @@ import { HttpResponse } from "../../main/http/http_response";
 import { IRoomRepository } from "../../model/postgre/interfaces/room_repository_interface";
 import { RoomEntity } from "../../types/entity/room_entity";
 import { join_room_validation } from "../../validation/join_room_validation";
+import { IJoinRoomUseCase } from "./interface/join_room_interface";
 
 
 type Body = {
@@ -17,7 +18,7 @@ type BodyResponse = {
         }
 }
 
-export class JoinRoomUseCase{
+export class JoinRoomUseCase implements IJoinRoomUseCase{
 
     private repository: IRoomRepository
 
