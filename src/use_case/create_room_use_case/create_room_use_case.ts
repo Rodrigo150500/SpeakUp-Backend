@@ -3,6 +3,7 @@ import { HttpResponse } from "../../main/http/http_response"
 import { IRoomRepository } from "../../model/postgre/interfaces/room_repository_interface"
 import { RoomEntity } from "../../types/entity/room_entity"
 import { create_room_validation } from "../../validation/create_room_validation"
+import { ICreateRoomUseCase } from './interface/create_room_interface'
 
 type Body = {
     name: string,
@@ -17,7 +18,7 @@ type BodyResposnse = {
     }
 }
 
-export class CreateRoomUseCase{
+export class CreateRoomUseCase implements ICreateRoomUseCase{
 
     private repository: IRoomRepository
 

@@ -6,6 +6,7 @@ import { register_user_validation } from "../../validation/register_user_validat
 
 import { HttpResponse } from "../../main/http/http_response";
 import { HttpRequest } from "../../main/http/http_request";
+import { IRegisterUseCase } from './interface/register_interface';
 
 type Body = {
     name: string
@@ -24,7 +25,7 @@ type BodyResponse = {
         }
 }
 
-export class RegisterUserUseCase{
+export class RegisterUserUseCase implements IRegisterUseCase{
 
     private repository: IUserRepository
 

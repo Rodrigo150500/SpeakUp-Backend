@@ -3,13 +3,22 @@ import { HttpResponse } from "../../main/http/http_response";
 import { UserRepository } from "../../model/postgre/user_repository";
 import { IUserResponse } from "../../types/user";
 import { login_user_validation } from "../../validation/login_user_validation";
+import { ILoginUseCase } from './interface/login_interface';
 
 type Body = {
     email: string
     password: string
 }
 
-export class LoginUseCase{
+type BodyResponse = {
+    data:{
+        operation: string,
+        count: number,
+        attributes: Omit<IUserResponse, "password">
+    }
+}
+
+export class LoginUseCase implements ILoginUseCase{
 
     private repository: UserRepository
 
@@ -17,7 +26,7 @@ export class LoginUseCase{
         this.repository = repository
     }
 
-    async handle(http_request: HttpRequest<Body>){
+    async handle(http_request: HttpRequest<Body>):Promise<HttpResponse<BodyResponse>>{
 
         const parsed = login_user_validation(http_request.body)
         
