@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Aluno</title>
+</head>
+<body>
+
+  <h2>Aluno</h2>
+
+  <input id="roomCode" placeholder="Código da sala" />
+  <button onclick="joinRoom()">Entrar na Sala</button>
+
+  <br><br>
+
+  <input id="message" placeholder="Digite sua mensagem" />
+  <button onclick="sendMessage()">Enviar</button>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const socket = io("http://localhost:3000")
+
+    function joinRoom() {
+      const roomCode = document.getElementById("roomCode").value
+
+      socket.emit("join_room", { roomCode })
+
+      console.log("Aluno entrou na sala:", roomCode)
+    }
+
+    function sendMessage() {
+      const roomCode = document.getElementById("roomCode").value
+      const message = document.getElementById("message").value
+
+      socket.emit("send_message", {
+        roomCode,
+        message
+      })
+
+      console.log("Mensagem enviada:", message)
+    }
+  </script>
+
+</body>
+</html>
