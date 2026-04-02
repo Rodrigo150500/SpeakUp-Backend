@@ -1,28 +1,23 @@
-export class UserEntity{
+import {Role} from "../../generated/prisma/client"
+
+export class UserEntity {
 
   id?: string
-  number?: number
-  created_at?: Date
-  
-  email: string 
   name: string
+  email: string
   password: string
-  section: string
-  grade: string
-  role: string
+  created_at?: Date
+  role: Role
 
-  constructor(name: string, email: string, password: string, section: string, grade: string, role: string,id?: string, number?: number, created_at?: Date){
 
+  constructor( name: string, email: string, password: string, role: Role, created_at?: Date, id?:string,){
     this.id = id
-    this.number = number
-    this.created_at = created_at
     this.name = name
     this.email = email
     this.password = password
-    this.section = section
-    this.grade = grade
-    this.role = role
-    
+    this.created_at = created_at
+    this.role = role  
+
   }
 
 }
