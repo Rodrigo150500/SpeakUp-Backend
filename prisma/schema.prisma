@@ -12,29 +12,43 @@ datasource db {
   provider = "postgresql"
 }
 
-model Student {
+model User {
   id String @id @default(uuid())
   name String
   email String @unique
+  password String
+  created_at DateTime @default(now())
+  role Role
+  student Student?
+  professor Professor?
+
+}
+
+enum Role{
+  STUDENT
+  TEACHER
+}
+
+model Student {
+  id String @id @default(uuid())
+  user_id String @unique
+  user User @relation(fields: [user_id], references: [id])
+
   grade String
   section String
   number Int @default(autoincrement())
-  password String
-  role String
-  created_at DateTime 
 }
 
 model Professor {
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  password String
-  created_at DateTime
-}
+  id       String @id @default(uuid())
+  user_id  String @unique
+  user     User   @relation(fields: [user_id], references: [id])
 
+  subject  String
+}
 model Room{
   id String @id @default(uuid())
   room_code String @unique
-  created_at DateTime
+  created_at DateTime @default(now())
   name String
 }
