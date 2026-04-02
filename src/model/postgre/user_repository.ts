@@ -1,12 +1,13 @@
 import {prisma} from "../../driver/prisma"
+import { UserEntity } from '../../entities/user_entity'
 
-import { IUser, IUserResponse } from "../../types/user"
+import { IUserResponse } from "../../types/user"
 
 import { IUserRepository } from "./interfaces/user_repository_interface"
 
 export class UserRepository implements IUserRepository{
 
-    async create({name, email, password, role, section, grade}: IUser): Promise<IUserResponse>{
+    async create({name, email, password, role, section, grade}: UserEntity): Promise<UserEntity>{
 
         const user = await prisma.users.create({
             data:{
@@ -18,10 +19,23 @@ export class UserRepository implements IUserRepository{
                 grade: grade,
                 created_at: new Date()
             }
-        })
+        })   
+
+        const user_entity = new UserEntity(
+            user.name,
+            user.email,
+            user.password,
+            user.section,
+            user.grade,
+            user.role,
+            user.id,
+            user.number,
+            user.created_at
+        )
+
+        return user_entity
         
 
-        return user
     }
 
     async findById(id: string): Promise<IUserResponse | null> {

@@ -1,29 +1,11 @@
 import { IUserRepository } from "../../model/postgre/interfaces/user_repository_interface";
 
-import { IUser } from "../../types/user";
-
-import { register_user_validation } from "../../validation/register_user_validation";
-
-import { HttpResponse } from "../../main/http/http_response";
-import { HttpRequest } from "../../main/http/http_request";
 import { IRegisterUseCase } from './interface/register_interface';
 
-type Body = {
-    name: string
-    email: string 
-    password: string
-    section: string
-    grade: string
-    role: string
-}
+import { RegisterUserDTO, RegisterUserResponseDTO } from './register_user_dto';
 
-type BodyResponse = {
-    data: {
-            operation: string,
-            count: number,
-            attributes: Omit<IUser, "password">
-        }
-}
+import { UserEntity } from '../../entities/user_entity';
+
 
 export class RegisterUserUseCase implements IRegisterUseCase{
 
@@ -33,23 +15,31 @@ export class RegisterUserUseCase implements IRegisterUseCase{
         this.repository = user_repository
     }
 
-    async handle(http_request: HttpRequest<Body>): Promise<HttpResponse<BodyResponse>>{
+    async handle(data: RegisterUserDTO): Promise<RegisterUserResponseDTO>{
 
-        const parsed = register_user_validation(http_request.body)
+        const register_entity = new UserEntity(
+                data.name, 
+                data.email, 
+                data.grade, 
+                data.password, 
+                data.role, 
+                data.section)
 
-        await this.insert_in_database(parsed)
+        const response = await this.insert_in_database(register_entity)
 
-        const formatted_response = this.format_response(parsed)
+        const formatted_response = this.format_response(response)
 
         return formatted_response
     }
 
-    private async insert_in_database({name, email, password, section, grade, role}: IUser){
+    private async insert_in_database({name, email, password, section, grade, role}: UserEntity){
 
         try{
 
-            await this.repository.create({name, email, password, section, grade, role})
-        
+            const response = await this.repository.create({name, email, password, section, grade, role})
+            
+            return response
+
         }catch(error){
 
             throw new Error("Erro ao inserir no banco de dados") 
@@ -57,7 +47,7 @@ export class RegisterUserUseCase implements IRegisterUseCase{
         }
     }
 
-    private format_response(data: IUser){        
+    private format_response(data: UserEntity):RegisterUserResponseDTO{        
         
         const {password, ...safeData} = data
 
@@ -66,12 +56,12 @@ export class RegisterUserUseCase implements IRegisterUseCase{
                 operation: "Insert",
                 count: 1,
                 attributes: safeData
-            }
+            },
+            status_code: 201
         }
         
-        const http_response = new HttpResponse(response, 201)
-
-        return http_response
+        return response
+        
         
     }
 
