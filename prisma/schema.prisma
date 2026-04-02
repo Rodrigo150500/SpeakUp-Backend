@@ -44,7 +44,6 @@ model Teacher {
   user_id  String @unique
   user     User   @relation(fields: [user_id], references: [id])
 
-  subject  String
 }
 model Room{
   id String @id @default(uuid())
