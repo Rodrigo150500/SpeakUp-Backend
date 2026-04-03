@@ -2,10 +2,7 @@ import { IUserRepository } from "../../model/postgre/interfaces/user_repository_
 
 import { IRegisterUseCase } from './interface/register_interface';
 
-import { RegisterUserDTO, RegisterUserResponseDTO } from './register_user_dto';
-
-import { UserEntity } from '../../entities/user_entity';
-
+import { RegisterUserDTO, RegisterUserResponseDTO, StudentDTO, TeacherDTO } from './register_user_dto';
 
 export class RegisterUserUseCase implements IRegisterUseCase{
 
@@ -16,53 +13,31 @@ export class RegisterUserUseCase implements IRegisterUseCase{
     }
 
     async handle(data: RegisterUserDTO): Promise<RegisterUserResponseDTO>{
+        
+        if(data.role == "STUDANT"){
 
-        const register_entity = new UserEntity(
-                data.name, 
-                data.email, 
-                data.grade, 
-                data.password, 
-                data.role, 
-                data.section)
+            const response = await this.insert_student_in_database(data)
 
-        const response = await this.insert_in_database(register_entity)
+        }else{
 
-        const formatted_response = this.format_response(response)
+            const response = await this.insert_teacher_in_database(data)
 
-        return formatted_response
+        }        
+
+
+    }   
+
+    private async insert_student_in_database(data: StudentDTO){
+
+        return await this.repository.createStudent(data)
+
     }
 
-    private async insert_in_database({name, email, password, section, grade, role}: UserEntity){
+    private async insert_teacher_in_database(data: TeacherDTO){
 
-        try{
+        return await this.repository.createTeacher(data)
+    }
 
-            const response = await this.repository.create({name, email, password, section, grade, role})
+    
             
-            return response
-
-        }catch(error){
-
-            throw new Error("Erro ao inserir no banco de dados") 
-
-        }
-    }
-
-    private format_response(data: UserEntity):RegisterUserResponseDTO{        
-        
-        const {password, ...safeData} = data
-
-        const response = {
-            data: {
-                operation: "Insert",
-                count: 1,
-                attributes: safeData
-            },
-            status_code: 201
-        }
-        
-        return response
-        
-        
-    }
-
 }
