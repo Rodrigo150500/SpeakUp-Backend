@@ -1,12 +1,15 @@
 import {prisma} from "../../driver/prisma"
 
 import { Role } from '../../../generated/prisma/enums'
-import { CreateStudentInput, CreateStudentOutput, CreateTeacherInput, CreateTeacherOutput, FindByEmailOutput, StudentUser, TeacherUser} from './types/user_repository_types'
+
 import { IUserRepository } from './interfaces/user_repository_interface'
+
+import { FindByEmailOutput, StudentUser, TeacherUser } from "./types/user_repository_output"
+import { CreateStudentInput, CreateTeacherInput } from "./types/user_repository_input"
 
 export class UserRepository implements IUserRepository{
 
-    async createStudent(data: CreateStudentInput): Promise<CreateStudentOutput>{
+    async createStudent(data: CreateStudentInput): Promise<StudentUser>{
 
         const user = await prisma.user.create({
 
@@ -29,11 +32,14 @@ export class UserRepository implements IUserRepository{
         })
         
 
-        return user
+        return {
+            ...user,
+            teacher: null
+        }
 
     }
     
-    async createTeacher(data: CreateTeacherInput): Promise<CreateTeacherOutput>{
+    async createTeacher(data: CreateTeacherInput): Promise<TeacherUser>{
 
         const user = await prisma.user.create({
             data:{
@@ -51,7 +57,10 @@ export class UserRepository implements IUserRepository{
             }
         })
 
-        return user
+        return {
+            ...user,
+            student: null
+        }
 
     }
 

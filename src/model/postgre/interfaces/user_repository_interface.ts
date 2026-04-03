@@ -1,4 +1,4 @@
-import { CreateStudentInput, CreateStudentOutput, CreateTeacherInput, CreateTeacherOutput, FindByEmailOutput } from '../types/user_repository_types';
+import { CreateStudentInput, CreateStudentOutput, CreateTeacherInput, CreateTeacherOutput, FindByEmailOutput } from '../types/user_repository_output';
 
 
 export interface IUserRepository{
