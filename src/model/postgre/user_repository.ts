@@ -1,64 +1,94 @@
 import {prisma} from "../../driver/prisma"
-import { UserEntity } from '../../entities/user_entity'
 
-import { IUserResponse } from "../../types/user"
-
-import { IUserRepository } from "./interfaces/user_repository_interface"
+import { Role } from '../../../generated/prisma/enums'
+import { CreateStudentInput, CreateStudentOutput, CreateTeacherInput, CreateTeacherOutput, FindByEmailOutput, StudentUser, TeacherUser} from './types/user_repository_types'
+import { IUserRepository } from './interfaces/user_repository_interface'
 
 export class UserRepository implements IUserRepository{
 
-    async create({name, email, password, role, section, grade}: UserEntity): Promise<UserEntity>{
+    async createStudent(data: CreateStudentInput): Promise<CreateStudentOutput>{
 
-        const user = await prisma.users.create({
+        const user = await prisma.user.create({
+
             data:{
-                name: name,
-                email: email,
-                password: password,
-                role: role,
-                section: section,
-                grade: grade,
-                created_at: new Date()
+                name: data.name,
+                email: data.email,
+                password: data.password,
+                role: Role.STUDENT,
+
+                student:{
+                    create:{
+                        grade: data.grade,
+                        section: data.section
+                    }
+                }                
+            },
+            include:{
+                student: true
             }
-        })   
-
-        const user_entity = new UserEntity(
-            user.name,
-            user.email,
-            user.password,
-            user.section,
-            user.grade,
-            user.role,
-            user.id,
-            user.number,
-            user.created_at
-        )
-
-        return user_entity
+        })
         
 
+        return user
+
+    }
+    
+    async createTeacher(data: CreateTeacherInput): Promise<CreateTeacherOutput>{
+
+        const user = await prisma.user.create({
+            data:{
+                name: data.name,
+                email: data.email,
+                password: data.password,
+                role: data.role,
+                teacher:{
+                    create:{}
+                }               
+
+            },
+            include:{
+                teacher: true
+            }
+        })
+
+        return user
+
     }
 
-    async findById(id: string): Promise<IUserResponse | null> {
+    async findByEmail(email: string): Promise<FindByEmailOutput>{
 
-        const user = await prisma.users.findUnique({
+        const user = await prisma.user.findUnique({
             where:{
-                id: id
+                email: email
+            },
+            include:{
+                student: true,
+                teacher: true
             }
-        })
+        })        
 
-        return user
+        if(!user){
+            throw new Error("Usuário não encontrado")
+        }
+
+        if (user.teacher) {
+            return {
+            ...user,
+            student: null
+            } as TeacherUser
+        }
+
+        if (user.student) {
+            return {
+            ...user,
+            teacher: null
+            } as StudentUser
+        }
+
+        throw new Error("Usuário não definido")
 
     }
 
-    async findByEmail(email: string): Promise<IUserResponse | null>{
-
-        const user = await prisma.users.findUnique({
-            where: {
-                email: email
-            }
-        })
-
-        return user
-
-    } 
 }
+
+

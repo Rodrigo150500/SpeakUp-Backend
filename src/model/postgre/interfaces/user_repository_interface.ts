@@ -1,11 +1,12 @@
-import { UserEntity } from '../../../entities/user_entity'
-import { IUser, IUserResponse } from "../../../types/user"
+import { CreateStudentInput, CreateStudentOutput, CreateTeacherInput, CreateTeacherOutput, FindByEmailOutput } from '../types/user_repository_types';
+
 
 export interface IUserRepository{
 
-    create: ({name, email, password, role, section, grade}: IUser) => Promise<UserEntity>
-    
-    findByEmail: (email: string) => Promise<IUserResponse | null>
+    createStudent: (data: CreateStudentInput) => Promise<CreateStudentOutput>
 
-    findById: (id: string) => Promise<IUserResponse | null >
+    createTeacher: (data: CreateTeacherInput) => Promise<CreateTeacherOutput>
+
+    findByEmail: (email: string) => Promise<FindByEmailOutput>
+       
 }
