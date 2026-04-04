@@ -1,11 +1,12 @@
-import { CreateStudentInput, CreateStudentOutput, CreateTeacherInput, CreateTeacherOutput, FindByEmailOutput } from '../types/user_repository_output';
+import { CreateStudentInput, CreateTeacherInput } from '../types/user_repository_input'
+import { FindByEmailOutput, StudentUser, TeacherUser } from '../types/user_repository_output'
 
 
 export interface IUserRepository{
 
-    createStudent: (data: CreateStudentInput) => Promise<CreateStudentOutput>
+    createStudent: (data: CreateStudentInput) => Promise<StudentUser>
 
-    createTeacher: (data: CreateTeacherInput) => Promise<CreateTeacherOutput>
+    createTeacher: (data: CreateTeacherInput) => Promise<TeacherUser>
 
     findByEmail: (email: string) => Promise<FindByEmailOutput>
        
