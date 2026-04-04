@@ -10,7 +10,7 @@ import { CreateStudentInput, CreateTeacherInput } from "./types/user_repository_
 export class UserRepository implements IUserRepository{
 
     async createStudent(data: CreateStudentInput): Promise<StudentUser>{
-
+        
         const user = await prisma.user.create({
 
             data:{
@@ -31,11 +31,7 @@ export class UserRepository implements IUserRepository{
             }
         })
         
-
-        return {
-            ...user,
-            teacher: null
-        }
+        return user
 
     }
     
@@ -46,7 +42,7 @@ export class UserRepository implements IUserRepository{
                 name: data.name,
                 email: data.email,
                 password: data.password,
-                role: data.role,
+                role: Role.TEACHER,
                 teacher:{
                     create:{}
                 }               
@@ -57,10 +53,7 @@ export class UserRepository implements IUserRepository{
             }
         })
 
-        return {
-            ...user,
-            student: null
-        }
+        return user
 
     }
 
@@ -81,17 +74,11 @@ export class UserRepository implements IUserRepository{
         }
 
         if (user.teacher) {
-            return {
-            ...user,
-            student: null
-            } as TeacherUser
+            return user as TeacherUser
         }
 
         if (user.student) {
-            return {
-            ...user,
-            teacher: null
-            } as StudentUser
+            return user as StudentUser
         }
 
         throw new Error("Usuário não definido")
@@ -99,5 +86,4 @@ export class UserRepository implements IUserRepository{
     }
 
 }
-
 
