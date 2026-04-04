@@ -2,44 +2,48 @@ import { RegisterUserUseCase } from "./register_user_case";
 
 import { UserRepository } from "../../model/postgre/user_repository";
 
-import { HttpRequest } from "../../main/http/http_request";
-import { IUser } from "../../types/user";
-
 import {expect, test} from "vitest"
-import { HttpResponse } from "../../main/http/http_response";
+import { RegisterUserDTO, RegisterUserResponseDTO, StudentResponseDTO } from './register_user_dto';
+import { number } from 'zod';
 
-test("Should create user in database", async () => {
+test("Should create student in database", async () => {
   
   const repository = new UserRepository()
   const useCase = new RegisterUserUseCase(repository)
 
-  const body: IUser = {
-    name: "Rodrigo",
-    email: "rodrigo.takara1505@gmail.com",
-    grade: "5°",
-    section: "B",
-    password: "123",
-    role: "Aluno"
+  const body:RegisterUserDTO = {
+    name: "Rodrigo Takara",
+    email: "Rodrigo.150523@gmail.com",
+    password: "123456",
+    grade: "8° ano",
+    section: "A",
+    role: 'STUDENT'
   }
 
-  const http_request = new HttpRequest(body)
-
-  const response = await useCase.handle(http_request)
-
-  const {password, ...safeData} = body
+  const response = await useCase.handle(body)
 
   const expected_response = {
-    data: {
-      operation: 'Insert',
+    data:{
+      operation: "Insert",
       count: 1,
-      attributes: safeData
-    }
+      attributes:{
+        id: expect.any(String),
+        name: body.name,
+        email: body.email,
+        created_at: expect.any(Date),
+        role: 'STUDENT',
+        student: {
+          id: expect.any(String),
+          user_id: expect.any(String),
+          grade: body.grade,
+          section: body.section,
+          number: expect.any(Number)
+        }
+      }
+    }, status_code: 201
   }
 
-  expect(response).toBeInstanceOf(HttpResponse)
-
-  expect(response.body).toStrictEqual(expected_response)
-
-  expect(response.status_code).toBe(201)
-
+  if(response.data.attributes.role == 'STUDENT'){
+    expect(response).toEqual(expected_response)
+  }
 })

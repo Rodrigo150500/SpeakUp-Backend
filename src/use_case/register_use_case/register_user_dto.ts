@@ -1,6 +1,3 @@
-import { Role } from "../../../generated/prisma/enums"
-import { StudentUser } from "../../model/postgre/types/user_repository_output"
-
 type BaseRegisterDTO = {
     name: string
     email: string
@@ -8,16 +5,13 @@ type BaseRegisterDTO = {
 }
 
 export type StudentDTO = BaseRegisterDTO & {
-    role: "STUDANT"
+    role: "STUDENT"
     grade: string
     section: string
-    user_id: string
-
 }
         
 export type TeacherDTO = BaseRegisterDTO & {
     role: "TEACHER"
-    user_id: string
 }
 
 export type RegisterUserDTO = TeacherDTO | StudentDTO
@@ -29,9 +23,8 @@ export type StudentResponseDTO = {
   id: string
   name: string
   email: string
-  password: string
   created_at: Date
-  role: Role,
+  role: 'STUDENT',
   student: {
     id: string
     user_id: string
@@ -46,9 +39,8 @@ export type TeacherResponseDTO = {
   id: string
   name: string
   email: string
-  password: string
-  created_at: Date
-  role: Role,
+  created_at: Date,
+  role: 'TEACHER',
   teacher:{
     id: string,
     user_id: string

@@ -3,7 +3,7 @@ import { StudentUser, TeacherUser } from "../../model/postgre/types/user_reposit
 
 import { IRegisterUseCase } from './interface/register_interface';
 
-import { RegisterUserDTO, RegisterUserResponseDTO, TeacherResponseDTO, StudentResponseDTO, StudentDTO, TeacherDTO } from './register_user_dto';
+import { RegisterUserDTO, RegisterUserResponseDTO, StudentDTO, TeacherDTO } from './register_user_dto';
 
 export class RegisterUserUseCase implements IRegisterUseCase{
 
@@ -15,7 +15,7 @@ export class RegisterUserUseCase implements IRegisterUseCase{
 
     async handle(data: RegisterUserDTO): Promise<RegisterUserResponseDTO>{
         
-        if(data.role == "STUDANT"){
+        if(data.role == "STUDENT"){
 
             const response = await this.insert_student_in_database(data)
 
@@ -47,25 +47,52 @@ export class RegisterUserUseCase implements IRegisterUseCase{
     }
 
     private format_response_student(data: StudentUser){
-        return {
+        const response:RegisterUserResponseDTO = 
+        {
             data:{
                 operation: "Insert",
                 count: 1,
                 attributes: {
-                    
+                    id: data.id,
+                    name: data.name,
+                    email: data.email,
+                    created_at: data.created_at,
+                    role: 'STUDENT',
+                    student:{
+                        id: data.student!.id,
+                        user_id: data.student!.user_id,
+                        grade: data.student!.grade,
+                        section: data.student!.section,
+                        number: data.student!.number
+
+                    }
                 }
             },status_code: 201
         }
+        return response
     }
 
     private format_response_teacher(data: TeacherUser){
-       return {
+
+        const response: RegisterUserResponseDTO = {
             data:{
                 operation: "Insert",
                 count: 1,
-                attributes: data
+                attributes: {
+                    id: data.id,
+                    name: data.name,
+                    email: data.email,
+                    created_at: data.created_at,
+                    role: 'TEACHER',
+                    teacher:{
+                        id: data.teacher!.id,
+                        user_id: data.teacher!.user_id
+                    }
+                }
             },status_code: 201
         }
+
+        return response
     }
 
     
