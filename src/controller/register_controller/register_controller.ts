@@ -8,13 +8,13 @@ import { IRegisterController } from './interface/register_interface'
 
 export class RegisterController implements IRegisterController{
 
-  use_case: IRegisterUseCase
+  private use_case: IRegisterUseCase
 
   constructor(use_case: IRegisterUseCase){
     this.use_case = use_case
   }
 
-  async execute(req: Request, res: Response): Promise<Response>{
+  async execute(req: any, res: any): Promise<Response>{
     
     const parsed = register_user_validation(req.body)
 
