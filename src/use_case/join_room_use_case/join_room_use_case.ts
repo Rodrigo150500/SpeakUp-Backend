@@ -1,22 +1,8 @@
-import { HttpRequest } from "../../main/http/http_request";
-import { HttpResponse } from "../../main/http/http_response";
 import { IRoomRepository } from "../../model/postgre/interfaces/room_repository_interface";
-import { RoomEntity } from "../../types/entity/room_entity";
-import { join_room_validation } from "../../validation/join_room_validation";
+import { CreateOutput } from '../../model/postgre/types/room_repository_output';
 import { IJoinRoomUseCase } from "./interface/join_room_interface";
+import { JoinRoomDTO, JoinRoomResponseDTO } from './join_room_dto';
 
-
-type Body = {
-    room_code: string
-}
-
-type BodyResponse = {
-     data:{
-            operation: string,
-            count: number,
-            attributes: RoomEntity
-        }
-}
 
 export class JoinRoomUseCase implements IJoinRoomUseCase{
 
@@ -26,11 +12,9 @@ export class JoinRoomUseCase implements IJoinRoomUseCase{
         this.repository = repository
     }
 
-    async handle(http_request: HttpRequest<Body>): Promise<HttpResponse<BodyResponse>>{
+    async handle(data: JoinRoomDTO): Promise<JoinRoomResponseDTO>{
 
-        const parsed = join_room_validation(http_request.body)
-
-        const {room_code} = parsed
+        const {room_code} = data
 
         const room_data = await this.verify_if_room_code_exists(room_code)
         
@@ -52,15 +36,18 @@ export class JoinRoomUseCase implements IJoinRoomUseCase{
 
     }
 
-    private format_response(data_room: RoomEntity){
+    private format_response(data: CreateOutput){
 
-        return new HttpResponse({
+        const response = {
             data:{
                 operation: "Get",
                 count: 1,
-                attributes: data_room
+                attributes: {
+                    ...data
+                }
             }
-        }, 200)
+        }
+        return response
 
     }
 
