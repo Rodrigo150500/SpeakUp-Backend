@@ -1,7 +1,7 @@
 import * as z from "zod"
 
 export function register_user_validation(data: unknown) {
-    
+
     const registerSchema = z.discriminatedUnion("role", [
     z.object({
         role: z.literal("STUDENT"),
