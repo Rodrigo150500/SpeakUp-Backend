@@ -15,7 +15,7 @@ export class LoginUseCase implements ILoginUseCase{
     async handle(data: LoginDTO):Promise<LoginResponseDTO>{
 
         const {email, password} = data
-
+        
         const user =  await this.findUserByEmail(email)
 
         if(user.role == 'STUDENT'){

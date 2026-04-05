@@ -5,7 +5,7 @@ import { ILogin } from "./interface/login_interface";
 
 export class LoginController implements ILogin{
 
-    use_case: ILoginUseCase
+    private use_case: ILoginUseCase
 
     constructor(use_case: ILoginUseCase){
         this.use_case = use_case
