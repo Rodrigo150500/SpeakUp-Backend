@@ -52,7 +52,8 @@ export class CreateRoomUseCase implements ICreateRoomUseCase{
                 attributes: {
                     ...data
                 }
-            }
+            },
+            status_code: 200
         }
         
         return response

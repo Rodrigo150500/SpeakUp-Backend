@@ -11,5 +11,6 @@ export type CreateRoomResponseDTO = {
     operation: string,
     count: number,
     attributes: CreateOutput 
-  }
+  },
+  status_code: number
 }

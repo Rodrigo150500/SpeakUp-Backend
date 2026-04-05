@@ -45,7 +45,8 @@ export class JoinRoomUseCase implements IJoinRoomUseCase{
                 attributes: {
                     ...data
                 }
-            }
+            },
+            status_code: 201
         }
         return response
 
