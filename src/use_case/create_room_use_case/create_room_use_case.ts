@@ -1,22 +1,7 @@
-import { HttpRequest } from "../../main/http/http_request"
-import { HttpResponse } from "../../main/http/http_response"
 import { IRoomRepository } from "../../model/postgre/interfaces/room_repository_interface"
-import { RoomEntity } from "../../types/entity/room_entity"
-import { create_room_validation } from "../../validation/create_room_validation"
+import { CreateOutput } from '../../model/postgre/types/room_repository_output'
+import { CreateRoomDTO, CreateRoomResponseDTO } from './create_room_dto'
 import { ICreateRoomUseCase } from './interface/create_room_interface'
-
-type Body = {
-    name: string,
-    room_code: string
-}
-
-type BodyResposnse = {
-    data:{
-        operation: string,
-        count: number,
-        attributes: RoomEntity
-    }
-}
 
 export class CreateRoomUseCase implements ICreateRoomUseCase{
 
@@ -26,11 +11,11 @@ export class CreateRoomUseCase implements ICreateRoomUseCase{
         this.repository = repository
     }
 
-    async handle(http_request: HttpRequest<Body>):Promise<HttpResponse<BodyResposnse>>{
+    async handle(data: CreateRoomDTO):Promise<CreateRoomResponseDTO>{
         
-        const parsed = create_room_validation(http_request.body)
+        const {name, room_code} = data
 
-        const {name, room_code} = parsed
+        this.verifyIfRoomExists(room_code)
 
         const response = await this.insert_in_database(name, room_code)
 
@@ -40,7 +25,17 @@ export class CreateRoomUseCase implements ICreateRoomUseCase{
 
     }
 
-    private async insert_in_database(name: string, room_code: string): Promise<RoomEntity>{
+    private async verifyIfRoomExists(room_code: string){
+
+        const room = await this.repository.findByCode(room_code)
+
+        if(room){
+            throw new Error("Sala existente")
+        }
+
+    }
+
+    private async insert_in_database(name: string, room_code: string): Promise<CreateOutput>{
 
         const response = await this.repository.create({name, room_code})
 
@@ -48,15 +43,20 @@ export class CreateRoomUseCase implements ICreateRoomUseCase{
 
     }
 
-    private format_response(data: RoomEntity){
+    private format_response(data: CreateOutput): CreateRoomResponseDTO{
 
-        return new HttpResponse({
-            data:{
+        const response = {
+            data: {
                 operation: "Insert",
                 count: 1,
-                attributes: data
+                attributes: {
+                    ...data
+                }
             }
-        }, 201)
+        }
+        
+        return response
+        
 
     }
 

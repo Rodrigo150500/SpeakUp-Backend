@@ -1,10 +1,10 @@
-import { RoomDTO } from "../../../types/DTO/roomDTO";
-import { RoomEntity } from "../../../types/entity/room_entity";
+import { CreateInput } from '../types/room_repository_input';
+import { CreateOutput } from '../types/room_repository_output';
 
 export interface IRoomRepository{
 
-    create: ({name, room_code}: RoomDTO) => Promise<RoomEntity>    
+    create: ({name, room_code}: CreateInput) => Promise<CreateOutput>
 
-    findByCode: (code: string) => Promise<RoomEntity | null>
+    findByCode: (code: string)=> Promise<CreateOutput | null>
 
 }

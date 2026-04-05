@@ -1,12 +1,12 @@
 import {prisma} from "../../driver/prisma"
 
-import { RoomDTO } from "../../types/DTO/roomDTO"
-import { RoomEntity } from "../../types/entity/room_entity"
 import { IRoomRepository } from "./interfaces/room_repository_interface"
+import { CreateInput } from './types/room_repository_input'
+import { CreateOutput } from './types/room_repository_output'
 
 export class RoomRepository implements IRoomRepository{
 
-    async create({name, room_code}: RoomDTO): Promise<RoomEntity>{
+    async create({name, room_code}: CreateInput):Promise<CreateOutput>{
 
         const room = await prisma.room.create({
             data:{
@@ -20,13 +20,17 @@ export class RoomRepository implements IRoomRepository{
 
     }
 
-    async findByCode(code: string): Promise<RoomEntity | null>{
+    async findByCode(code: string): Promise<CreateOutput | null>{
 
         const room = await prisma.room.findUnique({
             where:{
                 room_code: code
             }
         })
+
+        if(!room){
+            return null
+        }
 
         return room
 
