@@ -19,10 +19,10 @@ export function Routes(app: Express){
     
     app.post('/auth/register', (req, res) => registerUserComposer().execute(req, res))
 
-    app.get('/auth/login', (req, res) => loginComposer().execute(req, res))
+    app.post('/auth/login', (req, res) => loginComposer().execute(req, res))
 
     app.post('/room/create', (req, res) => createRoomComposer().execute(req, res))
 
-    app.get('/room/join', (req, res) => joinRoomComposer().execute(req, res))
+    app.post('/room/join', (req, res) => joinRoomComposer().execute(req, res))
 
 }
