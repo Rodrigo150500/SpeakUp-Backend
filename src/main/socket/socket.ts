@@ -24,11 +24,13 @@ export function setupSocket(server: HttpServer) {
     })
 
     //Send message to professor
-    socket.on("send_message", ({ roomCode, message }) => {
+    socket.on("send_message", ({ roomCode, message, name, date }) => {
       console.log("Mensagem recebida:", message)
 
       io.to(`professor_room_${roomCode}`).emit("receive_message", {
-        message
+        message,
+        name,
+        date
       })
     })
   })
